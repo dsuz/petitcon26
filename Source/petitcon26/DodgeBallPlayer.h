@@ -1,0 +1,51 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "GameFramework/GameplayCameraComponent.h"
+#include "GameFramework/Character.h"
+#include "DodgeBallPlayer.generated.h"
+
+UCLASS()
+class PETITCON26_API ADodgeBallPlayer : public ACharacter
+{
+	GENERATED_BODY()
+
+public:
+	ADodgeBallPlayer();
+
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
+	
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> AttackAction;
+	
+	/** Mouse Look Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> MouseLookAction;
+	
+	UFUNCTION(BlueprintCallable)
+	void Look(const FVector2D Value);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UGameplayCameraComponent> GameplayCameraComponent;
+	
+	void LimitAimAngle();
+	
+public:	
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AimLimitMin = -45;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AimLimitMax = 45;
+};
