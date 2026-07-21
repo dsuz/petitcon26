@@ -9,6 +9,10 @@ ADodgeBallPlayer::ADodgeBallPlayer()
 	// Gameplay Camera Setup
 	GameplayCameraComponent = CreateDefaultSubobject<UGameplayCameraComponent>("Camera");
 	GameplayCameraComponent->SetupAttachment(RootComponent);
+	
+	// Gameplay
+	Muzzle = CreateDefaultSubobject<USceneComponent>("Muzzle");
+	Muzzle->SetupAttachment(RootComponent);
 }
 
 void ADodgeBallPlayer::BeginPlay()
@@ -43,6 +47,12 @@ void ADodgeBallPlayer::LimitAimAngle()
 	auto ClampedPitchAngle = UKismetMathLibrary::ClampAngle(Rotation.Pitch, AimLimitMin, AimLimitMax);
 	Rotation.Pitch = ClampedPitchAngle;
 	PlayerController->SetControlRotation(Rotation);
+}
+
+void ADodgeBallPlayer::Shoot()
+{
+	auto DodgeBall = GetWorld()->SpawnActor<ADodgeBall>(DodgeBallActor, Muzzle->GetComponentLocation(), Muzzle->GetComponentRotation());
+	DodgeBall->Shoot();
 }
 
 void ADodgeBallPlayer::Tick(float DeltaTime)

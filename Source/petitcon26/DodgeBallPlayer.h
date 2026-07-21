@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/GameplayCameraComponent.h"
 #include "GameFramework/Character.h"
+#include "DodgeBall.h"
 #include "DodgeBallPlayer.generated.h"
 
 UCLASS()
@@ -22,28 +23,34 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/** Input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
-	
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> AttackAction;
-	
-	/** Mouse Look Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> MouseLookAction;
-	
 	UFUNCTION(BlueprintCallable)
 	void Look(const FVector2D Value);
+	void LimitAimAngle();
 	
+	/** Camera */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UGameplayCameraComponent> GameplayCameraComponent;
 	
-	void LimitAimAngle();
+	/** Gameplay */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ADodgeBall> DodgeBallActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<USceneComponent> Muzzle;
+	UFUNCTION(BlueprintCallable)
+	void Shoot();
 	
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+	/** Input */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AimLimitMin = -45;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
