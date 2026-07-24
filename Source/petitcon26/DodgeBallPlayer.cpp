@@ -49,9 +49,10 @@ void ADodgeBallPlayer::LimitAimAngle()
 	PlayerController->SetControlRotation(Rotation);
 }
 
-void ADodgeBallPlayer::Shoot()
+
+void ADodgeBallPlayer::Shoot(FVector Location)
 {
-	auto DodgeBall = GetWorld()->SpawnActor<ADodgeBall>(DodgeBallActor, Muzzle->GetComponentLocation(), Muzzle->GetComponentRotation());
+	auto DodgeBall = GetWorld()->SpawnActor<ADodgeBall>(DodgeBallActor, Location, GetControlRotation());
 	DodgeBall->Shoot();
 }
 

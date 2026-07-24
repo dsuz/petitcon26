@@ -44,7 +44,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USceneComponent> Muzzle;
 	UFUNCTION(BlueprintCallable)
-	void Shoot();
+	void Shoot(FVector Location);
 	
 public:	
 	virtual void Tick(float DeltaTime) override;
