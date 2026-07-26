@@ -1,5 +1,9 @@
 #include "DodgeBallPlayer.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Engine/World.h"
+#include "Engine/LocalPlayer.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 ADodgeBallPlayer::ADodgeBallPlayer()
 {
@@ -13,6 +17,8 @@ ADodgeBallPlayer::ADodgeBallPlayer()
 	// Gameplay
 	Muzzle = CreateDefaultSubobject<USceneComponent>("Muzzle");
 	Muzzle->SetupAttachment(RootComponent);
+	StaticDummyDodgeBall = CreateDefaultSubobject<UStaticMeshComponent>("StaticDummyDodgeBall");
+	StaticDummyDodgeBall->SetupAttachment(this->GetMesh(), SocketNameForBallHandling);
 }
 
 void ADodgeBallPlayer::BeginPlay()
@@ -53,6 +59,7 @@ void ADodgeBallPlayer::LimitAimAngle()
 void ADodgeBallPlayer::Shoot(FVector Location)
 {
 	auto DodgeBall = GetWorld()->SpawnActor<ADodgeBall>(DodgeBallActor, Location, GetControlRotation());
+	ShowDummyBall(false);
 	DodgeBall->Shoot();
 }
 
@@ -64,4 +71,10 @@ void ADodgeBallPlayer::Tick(float DeltaTime)
 void ADodgeBallPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+// 手に持ったボールの表示/非表示を切り替える（flg = true => 表示する, flg = false => 消す）
+void ADodgeBallPlayer::ShowDummyBall(bool flg)
+{
+	StaticDummyDodgeBall->SetVisibility(flg);
 }

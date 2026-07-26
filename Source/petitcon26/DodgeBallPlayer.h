@@ -45,6 +45,12 @@ protected:
 	TObjectPtr<USceneComponent> Muzzle;
 	UFUNCTION(BlueprintCallable)
 	void Shoot(FVector Location);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UStaticMeshComponent> StaticDummyDodgeBall;	// ボールを持っている時に表示するダミーのボール
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName SocketNameForBallHandling;	// ボールを固定するソケットの名前
+	UFUNCTION(BlueprintCallable)
+	void ShowDummyBall(bool flg);
 	
 public:	
 	virtual void Tick(float DeltaTime) override;

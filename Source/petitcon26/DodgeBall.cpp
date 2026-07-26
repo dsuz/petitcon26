@@ -29,4 +29,3 @@ void ADodgeBall::Shoot()
 	// TODO: 固定値なのであとで変える
 	MeshComponent->AddImpulse(this->GetActorForwardVector() * 30000);
 }
-
