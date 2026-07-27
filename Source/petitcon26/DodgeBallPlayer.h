@@ -21,8 +21,6 @@ public:
 	ADodgeBallPlayer();
 
 protected:
-	virtual void BeginPlay() override;
-
 	/** Input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -52,7 +50,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ShowDummyBall(bool flg);
 	
-public:	
+public:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	

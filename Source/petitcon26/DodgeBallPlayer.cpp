@@ -43,7 +43,7 @@ void ADodgeBallPlayer::Look(const FVector2D Value)
 {
 	AddControllerPitchInput(Value.Y);
 	AddControllerYawInput(Value.X);
-	//LimitAimAngle();
+	LimitAimAngle();
 }
 
 void ADodgeBallPlayer::LimitAimAngle()
