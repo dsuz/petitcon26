@@ -1,5 +1,5 @@
 #include "Enemy.h"
-
+#include "Kismet/GameplayStatics.h"	// for PlaySound2D
 #include "GameFramework/PawnMovementComponent.h"
 
 AEnemy::AEnemy()
@@ -25,8 +25,20 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	UE_LOG(LogTemp, Log, TEXT("Enemy hit by %s"), *(OtherActor->GetName()));
+	UGameplayStatics::PlaySound2D(GetWorld(), AttackSound);
 	ActivateRagdoll();
-	BlowAwayRagdoll(this->GetActorForwardVector() * -1, 1000);
+	// BlowAwayRagdoll(this->GetActorForwardVector() * -1, 1000);
+	BlowAwayRagdoll(OtherActor->GetActorLocation(), 3000, 100);
+	
+	// ディレイ
+	FTimerHandle Handle;
+	FTimerDelegate TimerDel;
+	TimerDel.BindLambda([this]()
+	{
+		this->Destroy();
+	});
+	
+	GetWorldTimerManager().SetTimer(Handle, TimerDel, 3.0f, false);
 }
 
 void AEnemy::ActivateRagdoll()
@@ -61,10 +73,10 @@ void AEnemy::BlowAwayRagdoll(FVector Direction, float Strength)
 	{
 		return;
 	}
-
+	
 	const FVector Impulse = Direction.GetSafeNormal() * Strength;
-
-	// ルートボーンだけでなく全ボディに適用する
+	
+	// // ルートボーンだけでなく全ボディに適用する
 	for (FBodyInstance* Body : SkeletalMeshComponent->Bodies)
 	{
 		if (Body && Body->IsInstanceSimulatingPhysics())
@@ -72,6 +84,22 @@ void AEnemy::BlowAwayRagdoll(FVector Direction, float Strength)
 			Body->AddImpulse(Impulse, /*bVelChange=*/true);
 		}
 	}
+}
+
+void AEnemy::BlowAwayRagdoll(FVector ExplosionOrigin, float Strength, float Radius)
+{
+	if (!SkeletalMeshComponent || !SkeletalMeshComponent->IsSimulatingPhysics())
+	{
+		return;
+	}
+
+	SkeletalMeshComponent->AddRadialImpulse(
+		ExplosionOrigin,
+		Radius,
+		Strength,
+		ERadialImpulseFalloff::RIF_Linear, // 中心に近いほど強い
+		/*bVelChange=*/true
+	);
 }
 
 void AEnemy::BeginPlay()

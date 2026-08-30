@@ -31,13 +31,15 @@ protected:
 	TObjectPtr<USphereComponent> LeftFoot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USphereComponent> RightFoot;
-	UFUNCTION(BlueprintCallable)
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<USoundWave> AttackSound;	// ボールが当たった時の音
 	UFUNCTION(BlueprintCallable)
 	void ActivateRagdoll();
-	UFUNCTION(BlueprintCallable)
 	void BlowAwayRagdoll(FVector Direction, float Strength);
+	void BlowAwayRagdoll(FVector ExplosionOrigin, float Strength, float Radius);
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };
