@@ -61,6 +61,18 @@ void ADodgeBallPlayer::Shoot(FVector Location)
 	auto DodgeBall = GetWorld()->SpawnActor<ADodgeBall>(DodgeBallActor, Location, GetControlRotation());
 	ShowDummyBall(false);
 	DodgeBall->Shoot();
+	
+	// ディレイ
+	FTimerHandle Handle;
+	FTimerDelegate TimerDel;
+	TimerDel.BindLambda([this, DodgeBall]()
+	{
+		// 数秒後の処理
+		DodgeBall->Destroy();
+		ShowDummyBall(true);
+	});
+	
+	GetWorldTimerManager().SetTimer(Handle, TimerDel, 2.0f, false);
 }
 
 void ADodgeBallPlayer::Tick(float DeltaTime)
