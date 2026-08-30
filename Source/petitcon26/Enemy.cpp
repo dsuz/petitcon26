@@ -26,6 +26,7 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor);
 	UE_LOG(LogTemp, Log, TEXT("Enemy hit by %s"), *(OtherActor->GetName()));
 	ActivateRagdoll();
+	BlowAwayRagdoll(this->GetActorForwardVector() * -1, 1000);
 }
 
 void AEnemy::ActivateRagdoll()
@@ -52,6 +53,25 @@ void AEnemy::ActivateRagdoll()
 	SkeletalMeshComponent->SetSimulatePhysics(true);
 	SkeletalMeshComponent->WakeAllRigidBodies();
 	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AEnemy::BlowAwayRagdoll(FVector Direction, float Strength)
+{
+	if (!SkeletalMeshComponent || !SkeletalMeshComponent->IsSimulatingPhysics())
+	{
+		return;
+	}
+
+	const FVector Impulse = Direction.GetSafeNormal() * Strength;
+
+	// ルートボーンだけでなく全ボディに適用する
+	for (FBodyInstance* Body : SkeletalMeshComponent->Bodies)
+	{
+		if (Body && Body->IsInstanceSimulatingPhysics())
+		{
+			Body->AddImpulse(Impulse, /*bVelChange=*/true);
+		}
+	}
 }
 
 void AEnemy::BeginPlay()

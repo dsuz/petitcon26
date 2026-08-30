@@ -15,7 +15,8 @@ public class petitcon26 : ModuleRules
 			"Engine",
 			"InputCore",
 			"EnhancedInput",
-			"GameplayCameras"
+			"GameplayCameras",
+			"PhysicsCore"
 		});
 
 		// Uncomment if you are using Slate UI

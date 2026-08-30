@@ -35,6 +35,8 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	UFUNCTION(BlueprintCallable)
 	void ActivateRagdoll();
+	UFUNCTION(BlueprintCallable)
+	void BlowAwayRagdoll(FVector Direction, float Strength);
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
